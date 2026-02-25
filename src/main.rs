@@ -110,8 +110,7 @@ fn use_template(
                         OverwriteMode::Yes => {}
                         OverwriteMode::No => continue,
                         OverwriteMode::Ask => {
-                            let skip;
-                            loop {
+                            let skip = loop {
                                 println!("replace file {:?} y/n", path);
                                 match std::io::stdin()
                                     .lock()
@@ -122,16 +121,14 @@ fn use_template(
                                     .as_str()
                                 {
                                     "y" => {
-                                        skip = false;
-                                        break;
+                                        break false;
                                     }
                                     "n" => {
-                                        skip = true;
-                                        break;
+                                        break true;
                                     }
                                     _ => {}
                                 }
-                            }
+                            };
                             if skip {
                                 continue;
                             }
