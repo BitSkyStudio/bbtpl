@@ -93,11 +93,14 @@ fn use_template(
         };
         entries.push((path.to_string_lossy().to_string(), template_entry));
     }
+    fn read_line() -> String {
+        std::io::stdin().lock().lines().next().unwrap().unwrap()
+    }
     for requested_replacement in requested_replacements {
         if !replacements.contains_key(&requested_replacement) {
             print!("{requested_replacement}=");
             std::io::stdout().flush().unwrap();
-            let value = std::io::stdin().lock().lines().next().unwrap().unwrap();
+            let value = read_line();
             replacements.insert(requested_replacement, value);
         }
     }
@@ -112,14 +115,8 @@ fn use_template(
                         OverwriteMode::Ask => {
                             let skip = loop {
                                 println!("replace file {:?} y/n", path);
-                                match std::io::stdin()
-                                    .lock()
-                                    .lines()
-                                    .next()
-                                    .unwrap()
-                                    .unwrap()
-                                    .as_str()
-                                {
+                                let answer = read_line();
+                                match answer.as_str() {
                                     "y" => {
                                         break false;
                                     }
